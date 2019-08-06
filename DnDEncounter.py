@@ -43,6 +43,7 @@ class Character(): #character class for the player and enemy
 
     def weapon_attack(self, enemy_defense): #pass in the enemies defense character.defense
 
+        enemydef = int(enemy_defense)
         d20 = random.randint(1,20)
         attack = d20 + (self.strengthmod) #going by dnd strength modifer (score - 10)/2 round down
         #sword does a d12 of damage, has a 2x critical on a 19-20 only
@@ -51,11 +52,11 @@ class Character(): #character class for the player and enemy
                 print("{} rolled a {} -- Critical Hit!".format(self.name, d20))  #value rolled for the sake of troubleshoot and visiibility
                 return int(self.weapon_damage() + self.weapon_damage()) #2x multipler on 19-20
 
-            elif attack >= enemy_defense and d20 == 19:  #2x multiplier on 19-20
+            elif attack >= enemydef and d20 == 19:  #2x multiplier on 19-20
                 print("{} rolled a {} -- Critical Hit!".format(self.name, d20)) 
                 return int(self.weapon_damage() + self.weapon_damage())
 
-            elif attack >= enemy_defense:  #regular hit
+            elif attack >= enemydef:  #regular hit
                 print("{} rolled a {} -- Hit!".format(self.name, d20)) 
                 return int(self.weapon_damage())
 
@@ -69,7 +70,7 @@ class Character(): #character class for the player and enemy
                 print("{} rolled a {} -- Critical Hit!".format(self.name, d20))  #value rolled for the sake of troubleshoot and visiibility
                 return int(self.weapon_damage() + self.weapon_damage() + self.weapon_damage()) #3x multipler on 20
 
-            elif attack >= enemy_defense:  #regular hit
+            elif attack >= enemydef:  #regular hit
                 print("{} rolled a {} -- Hit!".format(self.name, d20)) 
                 return int(self.weapon_damage())
 
@@ -83,28 +84,42 @@ class Character(): #character class for the player and enemy
                 print("{} rolled a {} -- Critical Hit!".format(self.name, d20))  #value rolled for the sake of troubleshoot and visiibility
                 return int(self.weapon_damage() + self.weapon_damage()) #2x multipler on 17-20
 
-            elif attack >= enemy_defense and d20 >= 17:  #2x multiplier on 17-20
+            elif attack >= enemydef and d20 >= 17:  #2x multiplier on 17-20    
                 print("{} rolled a {} -- Critical Hit!".format(self.name, d20)) 
                 return int(self.weapon_damage() + self.weapon_damage())
 
-            elif attack >= enemy_defense:  #regular hit
+            elif attack >= enemydef:  #regular hit
                 print("{} rolled a {} -- Hit!".format(self.name, d20)) 
                 return int(self.weapon_damage())
 
             else: #miss
                 print("{} rolled a {} -- Miss!".format(self.name, d20)) 
-
-
-    def i_attack(self, enemy_health, enemy_defense):    
-        try:
-            damagedone = int(self.weapon_attack(enemy_defense))
-            damagedhealth = enemy_health - damagedone
-            print("{} did {} damage!  Enemy health now at {}...Next Turn!".format(self.name, damagedone, damagedhealth))
-            if(damagedhealth < 0):
-                print("The Enemy has Collapsed!")
-            return damagedhealth
-        except:
+                
+    def i_attack(self, enemy_health, enemy_defense):
+        enemyhealth = int(enemy_health) #cast the enemy health from a string to an int
+        damagedone = self.weapon_attack(enemy_defense) #cast the enemy defense from a string to an int
+        if damagedone == None: #cast the enemy defense from a string to an int
             print("Next Turn")
+            return enemyhealth
+        damagedone = int(damagedone)
+        damagedhealth = enemyhealth - damagedone
+        print("{} did {} damage!  Enemy health now at {}...Next Turn!".format(self.name, damagedone, damagedhealth))
+        if(damagedhealth < 0):
+            print("The Enemy has Collapsed!")
+        return damagedhealth
+
+
+    #
+    #def i_attack(self, enemy_health, enemy_defense):    
+     #   try:
+      #      damagedone = int(self.weapon_attack(enemy_defense))
+       #     damagedhealth = enemy_health - damagedone
+        #    print("{} did {} damage!  Enemy health now at {}...Next Turn!".format(self.name, damagedone, damagedhealth))
+         #   if(damagedhealth < 0):
+           #     print("The Enemy has Collapsed!")
+          #  return damagedhealth
+        #except:
+         #   print("Next Turn")```
 
 
             #lets start a fight
@@ -131,10 +146,20 @@ print(fighter2)  #check attributes
 
 input("Ready to fight?")
 
+fighter1.health = fighter2.i_attack(fighter1.health, fighter1.defense)
+input()
+fighter2.health = fighter1.i_attack(fighter2.health, fighter2.defense)
+input()
+fighter1.health = fighter2.i_attack(fighter1.health, fighter1.defense)
+input()
+fighter2.health = fighter1.i_attack(fighter2.health, fighter2.defense)
+input()
+fighter1.health = fighter2.i_attack(fighter1.health, fighter1.defense)
+input()
+fighter2.health = fighter1.i_attack(fighter2.health, fighter2.defense)
+input()
+fighter1.health = fighter2.i_attack(fighter1.health, fighter1.defense)
+input()
+fighter2.health = fighter1.i_attack(fighter2.health, fighter2.defense)
+input()
 
-
-#CURRENTLY STUCK GETTING THIS LOOP TO WORK
-while fighter1.gethealth > 0 or fighter2.gethealth > 0:
-    fighter1.health = fighter2.i_attack(fighter1.health, fighter1.defense)
-    input()
-    fighter2.health = fighter1.i_attack(fighter2.health, fighter2.defense)
