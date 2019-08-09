@@ -1,3 +1,4 @@
+
 import random
 from collections import defaultdict
 
@@ -85,7 +86,7 @@ class Character:
     
     @property
     def weapondie(self):
-        return self.damage_by_weapon[weapon] #assign a weapon die to the player for damage
+        return self.damage_by_weapon[self.weapon] #assign a weapon die to the player for damage
     
     @property
     def strengthmod(self):
@@ -112,11 +113,15 @@ class Character:
         attackroll = self.d20.value
         multiplier = self.critical_multiplier(attackroll)
         
-        attack = attackroll + self.strengthmod
-        if attack < enemy_defense:
+        damage = self.weapon_damage
+
+        if attackroll < enemy_defense:
             return 0 # miss, no damage dealt
         
-        return attack * multiplier
+        if multiplier > 1:
+            print("{} landed a Critical Hit!".format(self.name))
+
+        return damage * multiplier
     
     def i_attack(self, enemy):
         damagedone = self.weapon_attack(enemy.defense)
